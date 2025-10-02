@@ -235,7 +235,7 @@ def main_worker():
     tqdm.write(f"✅ Done! MP4 saved to: {frame_save_path}")
 
     overlay_path = os.path.join(
-        os.path.dirname(frame_save_path) or ".", "mask_in_e2fgvi.mp4"
+        os.path.dirname(frame_save_path) or ".", "inpainting_mask_overlay.mp4"
     )
     ov_writer = imageio.get_writer(
         overlay_path,
