@@ -219,12 +219,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-'''
-Example:
-python batched_inference_e2fgvi.py --dataset jaco_play --split train --start 0 --end 5 --gpus 0 1
-'''
