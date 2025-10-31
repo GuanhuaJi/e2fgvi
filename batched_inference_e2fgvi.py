@@ -7,7 +7,7 @@ Multi-GPU E2FGVI-HQ runner (process version)
 - Ingests per-episode source/merged mask videos
 - Runs multiple workers per GPU (even split)
 """
-import argparse, os, sys, subprocess
+import argparse, os, sys, subprocess, time
 from multiprocessing import Process, JoinableQueue, Queue
 from typing import List, Tuple
 from pathlib import Path
@@ -86,10 +86,11 @@ def worker_proc(gpu_id: int, worker_slot: int, job_q: JoinableQueue, done_q: Que
             break
 
         video_path, mask_path, save_path, dilution = item
+        ep_id = Path(video_path).parent.name
+        start_time = time.perf_counter()
         try:
             run_episode(video_path, mask_path, save_path, dilution, row, suppress)
         except Exception as e:
-            ep_id = Path(video_path).parent.name
             print(f"[GPU {gpu_id} W{worker_slot}] ❌ Episode {ep_id}: {e}")
             try:
                 with open(failed_file, "a", encoding="utf-8") as ff:
@@ -97,6 +98,8 @@ def worker_proc(gpu_id: int, worker_slot: int, job_q: JoinableQueue, done_q: Que
             except Exception as fe:
                 print(f"[GPU {gpu_id} W{worker_slot}] ⚠️  Could not write to {failed_file}: {fe}")
         finally:
+            elapsed = time.perf_counter() - start_time
+            print(f"[TIMER] Episode {ep_id} finished in {elapsed:.2f}s")
             done_q.put(1)   # notify main progress bar
             job_q.task_done()
 
@@ -219,3 +222,8 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+'''
+CUDA_VISIBLE_DEVICES=6 python batched_inference_e2fgvi.py --dataset ucsd_kitchen_dataset_converted_externally_to_rlds \
+--split train --start 1 --end 2 --dilution 18
+'''
