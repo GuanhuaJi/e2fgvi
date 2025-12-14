@@ -22,8 +22,6 @@ if str(CORE_ROOT) not in sys.path:
 
 from config import config
 
-DEFAULT_OUTPUT_ROOT = Path('/home/guanhuaji/test/oxe-aug/videos')
-
 CKPT_PATH = "release_model/E2FGVI-HQ-CVPR22.pth"
 # ───────────────────────── discover ──────────────────────────────────
 def make_pair(ep: str, base_dir: Path, dilution: int) -> Tuple[str, str, str, int]:
@@ -153,10 +151,6 @@ def main() -> None:
     out_cfg = dataset_cfg.get('out_path')
     if out_cfg:
         out_root = Path(out_cfg)
-        if not out_root.is_absolute():
-            out_root = DEFAULT_OUTPUT_ROOT / out_root
-    else:
-        out_root = DEFAULT_OUTPUT_ROOT
 
     base_dir = out_root / args.dataset / args.split
 
