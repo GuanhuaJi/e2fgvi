@@ -16,7 +16,7 @@ import cv2, numpy as np  # noqa: E402
 from tqdm import tqdm
 
 ROOT = Path(__file__).resolve().parents[1]
-CORE_ROOT = ROOT / 'rovi-aug-extension'
+CORE_ROOT = ROOT / 'AugE-Toolkit'
 if str(CORE_ROOT) not in sys.path:
     sys.path.insert(0, str(CORE_ROOT))
 
